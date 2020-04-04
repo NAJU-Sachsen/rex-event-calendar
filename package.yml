@@ -1,0 +1,17 @@
+package: naju_event_calendar
+version: '0.0.1'
+author: NAJU Sachsen
+supportpage: https://github.com/NAJU-Sachsen/rex-event-calendar
+requires:
+  redaxo: '^5.10'
+  php: '>=7.1'
+  packages:
+    naju_group_accounts: '>=0.0.1'
+page:
+  title: 'Veranstaltungen'
+  icon: rex-icon fa-calendar
+  subpages:
+    list:
+      title: 'Kalender'
+    add:
+      title: 'Hinzufügen'
