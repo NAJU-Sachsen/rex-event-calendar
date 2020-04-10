@@ -26,7 +26,7 @@ if (in_array($requested_func, $funcs)) {
 				delete from naju_event
 				where event_id = :id
 				limit 1
-			EOSQL;
+EOSQL;
 
 			$sql = rex_sql::factory()->setQuery($delete_query, ['id' => $event_id]);
 			
@@ -66,7 +66,7 @@ if (rex::getUser()->isAdmin()) {
 		where
 			e.event_start >= '$current_date'
 		order by e.event_start, e.event_end asc
-	EOSQL;
+EOSQL;
 	$events = rex_sql::factory()->setQuery($event_query)->getArray();
 } else {
 	$user_id = rex::getUser()->getId();
@@ -86,7 +86,7 @@ if (rex::getUser()->isAdmin()) {
 			e.event_start >= '$current_date'
 			and ga.account_id = '$user_id'
 		order by e.event_start, e.event_end asc
-	EOSQL;
+EOSQL;
 	$events = rex_sql::factory()->setQuery($event_query)->getArray();
 }
 
