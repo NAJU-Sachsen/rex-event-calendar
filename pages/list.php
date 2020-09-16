@@ -78,7 +78,7 @@ if (in_array($requested_func, $funcs)) {
 			if (!$event_id) {
 				break;
 			}
-			$delete_query = <<< EOSQL
+			$delete_query = <<<EOSQL
 				delete from naju_event
 				where event_id = :id
 				limit 1
