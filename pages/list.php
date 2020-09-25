@@ -49,9 +49,34 @@ if (in_array($requested_func, $funcs)) {
 			$field = $form->addTextField('event_location');
 			$field->setLabel('Ort');
 
+			// event target group type field
+			$field = $form->addSelectField('event_target_group_type');
+			$field->setLabel('Zielgruppen auswählen');
+			$select = $field->getSelect();
+			$select->setMultiple();
+
+			// inflate event target group select
+			$event = rex_sql::factory()->setQuery(
+				'select event_target_group_type from naju_event where event_id = :id', ['id' => $event_id])->getArray()[0];
+
+			$target_groups = ['children' => 'Kinder', 'teens' => 'Jugendliche', 'young_adults' => 'junge Erwachsene', 'families' => 'Familien'];
+			$selected_target_groups = explode(',', $event['event_target_group_type']);
+			foreach ($target_groups as $tg_key => $tg_val) {
+				if (in_array($tg_key, $selected_target_groups)) {
+					$select->addOption($tg_val, $tg_key, 0, 0, ['selected' => 'true']);
+				} else {
+					$select->addOption($tg_val, $tg_key);
+				}
+			}
+
 			// event_target_group
 			$field = $form->addTextField('event_target_group');
 			$field->setLabel('Zielgruppe');
+
+			// event type field
+			$field = $form->addRadioField('event_type');
+			$field->setLabel('Veranstaltungsart:');
+			$field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop', 'work_assignment' => 'Arbeitseinsatz']);
 
 			// event_price
 			$field = $form->addTextField('event_price');
@@ -149,7 +174,6 @@ EOSQL;
 		<table class="table">
 			<thead>
 				<tr>
-					<th>ID</th>
 					<th>Name</th>
 					<th>Ortsgruppe</th>
 					<th>Startdatum</th>
@@ -163,7 +187,6 @@ EOHTML;
 
 	foreach ($events as $event) {
 		$table .= '<tr>';
-		$table .= create_column($event['event_id']);
 		$table .= create_column($event['event_name']);
 		$table .= create_column($event['group_name']);
 		$table .= create_column($event['event_start']);

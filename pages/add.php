@@ -53,9 +53,24 @@ $field->setLabel('Beschreibung');
 $field = $form->addTextField('event_location');
 $field->setLabel('Ort (optional)');
 
+// event target group type field
+$field = $form->addSelectField('event_target_group_type');
+$field->setLabel('Zielgruppen auswählen');
+$select = $field->getSelect();
+$select->addArrayOptions(['children' => 'Kinder', 'teens' => 'Jugendliche',
+    'young_adults' => 'junge Erwachsene', 'families' => 'Familien']);
+$select->setMultiple();
+
+// TODO event_target_group_type is a SET column but SET is currently not supported...
+
 // event target group field
 $field = $form->addTextField('event_target_group');
-$field->setLabel('Zielgruppe (optional)');
+$field->setLabel('Zielgruppe beschreiben (optional)');
+
+// event type field
+$field = $form->addRadioField('event_type');
+$field->setLabel('Veranstaltungsart:');
+$field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop', 'work_assignment' => 'Arbeitseinsatz']);
 
 // event price field
 $field = $form->addTextField('event_price');
@@ -74,6 +89,23 @@ $field = $form->addLinkmapField('event_link');
 $field->setLabel('Link zum Artikel (optional)');
 $field->setDefaultSaveValue(null);
 
-$form->show();
+//$form->show();
 
-echo '<hr>';
+//echo '<hr>';
+
+$content = '';
+$msg = rex_get('_msg');
+
+if ($msg) {
+    $content .= '<div class="alert alert-info">' . rex_escape($msg) . '</div>';
+}
+
+$content .= $form->get();
+
+$fragment = new rex_fragment();
+$fragment->setVar('class', 'edit', false);
+$fragment->setVar('title', 'Veranstaltung erstellen', false);
+$fragment->setVar('body', $content, false);
+$content = $fragment->parse('core/page/section.php');
+
+echo $content;
