@@ -1,6 +1,6 @@
 <?php
 
-$form = rex_form::factory('naju_event', 'Veranstaltung hinzufügen', 'event_id = -1'); // ID = -1 does never exist => new entry
+$form = naju_event_form::factory('naju_event', 'Veranstaltung hinzufügen', 'event_id = -1'); // ID = -1 does never exist => new entry
 $form->addParam('func', 'add-event');
 
 // event name field

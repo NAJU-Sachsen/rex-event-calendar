@@ -25,7 +25,7 @@ if (in_array($requested_func, $funcs)) {
 			$fragment->setVar('title', 'Veranstaltung bearbeiten');
 			$fragment->setVar('class', 'edit', false);
 
-			$form = rex_form::factory('naju_event', 'Veranstaltung bearbeiten', 'event_id = ' . rex_sql::factory()->escape($event_id));
+			$form = naju_event_form::factory('naju_event', 'Veranstaltung bearbeiten', 'event_id = ' . rex_sql::factory()->escape($event_id));
 			$form->addParam('event_id', $event_id);
 
 			// event_name
