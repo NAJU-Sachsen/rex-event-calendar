@@ -71,7 +71,7 @@ $field->setLabel('Zielgruppe beschreiben (optional)');
 $field = $form->addRadioField('event_type');
 $field->setLabel('Veranstaltungsart:');
 $field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop',
-    'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen']);
+    'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen', 'other' => 'sonstiges']);
 
 // event price field
 $field = $form->addTextField('event_price');
