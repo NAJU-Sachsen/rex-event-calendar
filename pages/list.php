@@ -4,6 +4,9 @@
 $form_funcs = ['create_event', 'edit_event', 'delete_event'];
 $status_funcs = ['event_offline', 'event_online'];
 $requested_func = rex_get('func');
+$list_name = 'events';
+$offset_key = $list_name . '_start';
+$offset = rex_request($offset_key, 'int', 0);
 
 $msg = '';
 
@@ -30,6 +33,7 @@ if (in_array($requested_func, $form_funcs)) {
 
 			$form = naju_event_form::factory('naju_event', 'Veranstaltung bearbeiten', 'event_id = ' . rex_sql::factory()->escape($event_id));
 			$form->addParam('event_id', $event_id);
+			$form->addParam($offset_key, $offset);
 
 			// event_name
 			$field = $form->addTextField('event_name');
@@ -149,7 +153,7 @@ EOSQL;
 				join naju_local_group g on e.event_group = g.group_id
 			where
 				e.event_start >= '$current_date'
-			order by e.event_start, e.event_end asc
+			order by e.event_start desc, e.event_end desc
 EOSQL;
 		$events = rex_sql::factory()->setQuery($event_query)->getArray();
 	} else {
@@ -170,12 +174,12 @@ EOSQL;
 			where
 				e.event_start >= '$current_date'
 				and ga.account_id = '$user_id'
-			order by e.event_start, e.event_end asc
+			order by e.event_start desc, e.event_end desc
 EOSQL;
 		$events = rex_sql::factory()->setQuery($event_query)->getArray();
 	}
 
-	$list = rex_list::factory($event_query);
+	$list = rex_list::factory($event_query, 30, $list_name);
 
 	$th_edit = '<th colspan="3">Bearbeiten</th>';
 	$td_edit = '###TH_EDIT###';
@@ -194,41 +198,48 @@ EOSQL;
 		$list = $params['list'];
 		$content = '';
 
+		$offset_key = $params['params']['offset_key'];
+		$offset = $params['params']['offset'];
 		$event_id = $list->getValue('event_id');
 		$event_active = $list->getValue('event_active');
 
+		$href = [$offset_key => $offset, 'event_id' => urlencode($event_id)];
+
 		$content .= '
 			<td class="rex-table-action">
-				<a href="' . rex_url::currentBackendPage(['func' => 'edit_event', 'event_id' => urlencode($event_id)]) . '">
+				<a href="' . rex_url::currentBackendPage(array_merge($href, ['func' => 'edit_event'])) . '">
 					<i class="rex-icon rex-icon-edit"></i> editieren
 				</a>
 			</td>';
 
 		$content .=  '
 			<td class="rex-table-action">
-				<a href="' . rex_url::currentBackendPage(['func' => 'delete_event', 'event_id' => urlencode($event_id)]) . '">
+				<a href="' . rex_url::currentBackendPage(['func' => 'delete_event']) . '">
 					<i class="rex-icon rex-icon-delete"></i> löschen
 				</a>
 			</td>';
 
+		
 		if ($event_active) {
+			$href = array_merge($href, ['func' => 'event_offline']);
 			$content .= '
 				<td class="rex-table-action">
-					<a class="rex-online" href="' . rex_url::currentBackendPage(['func' => 'event_offline', 'event_id' => urlencode($event_id)]) . '">
+					<a class="rex-online" href="' . rex_url::currentBackendPage($href) . '">
 						<i class="rex-icon rex-icon-online"></i> online
 					</a>
 				</td>';
 		} else {
+			$href = array_merge($href, ['func' => 'event_online']);
 			$content .= '
 				<td class="rex-table-action">
-					<a class="rex-offline" href="' . rex_url::currentBackendPage(['func' => 'event_online', 'event_id' => urlencode($event_id)]) . '">
+					<a class="rex-offline" href="' . rex_url::currentBackendPage($href) . '">
 						<i class="rex-icon rex-icon-offline"></i> offline
 					</a>
 				</td>';
 		}
 
 		return $content;
-	});
+	}, ['offset_key' => $offset_key, 'offset' => $offset]);
 
 	$fragment->setVar('content', $msg . $list->get(), false);
 	echo $fragment->parse('core/page/section.php');
