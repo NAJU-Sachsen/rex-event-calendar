@@ -170,45 +170,41 @@ EOSQL;
 		$events = rex_sql::factory()->setQuery($event_query)->getArray();
 	}
 
+	$list = rex_list::factory($event_query);
 
-	$table = <<<EOHTML
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Ortsgruppe</th>
-					<th>Startdatum</th>
-					<th>Enddatum</th>
-					<th>Ort</th>
-					<th colspan="2">Bearbeiten</th>
-				</tr>
-			</thead>
-			<tbody>
-EOHTML;
+	$th_edit = '<th colspan="2">Bearbeiten</th>';
+	$td_edit = '###TH_EDIT###';
 
-	foreach ($events as $event) {
-		$table .= '<tr>';
-		$table .= create_column($event['event_name']);
-		$table .= create_column($event['group_name']);
-		$table .= create_column($event['event_start']);
-		$table .= create_column($event['event_end']);
-		$table .= create_column($event['event_location']);
-		$table .= '
+	$list->removeColumn('event_id');
+	$list->setColumnLabel('event_name', 'Name');
+	$list->setColumnLabel('group_name', 'Ortsgruppe');
+	$list->setColumnLabel('event_start', 'Startdatum');
+	$list->setColumnLabel('event_end', 'Enddatum');
+	$list->setColumnLabel('event_location', 'Ort');
+	$list->addColumn($th_edit, $td_edit, -1, ['###VALUE###', '###VALUE###']);
+	$list->setColumnFormat($th_edit, 'custom', function ($params) {
+		$list = $params['list'];
+		$content = '';
+
+		$event_id = $list->getValue('event_id');
+
+		$content .= '
 			<td class="rex-table-action">
-				<a href="' . rex_url::currentBackendPage(['func' => 'edit_event', 'event_id' => urlencode($event['event_id'])]) . '">
+				<a href="' . rex_url::currentBackendPage(['func' => 'edit_event', 'event_id' => urlencode($event_id)]) . '">
 					<i class="rex-icon rex-icon-edit"></i> editieren
 				</a>
 			</td>';
-		$table .= '
+
+		$content .=  '
 			<td class="rex-table-action">
-				<a href="' . rex_url::currentBackendPage(['func' => 'delete_event', 'event_id' => urlencode($event['event_id'])]) . '">
+				<a href="' . rex_url::currentBackendPage(['func' => 'delete_event', 'event_id' => urlencode($event_id)]) . '">
 					<i class="rex-icon rex-icon-delete"></i> löschen
 				</a>
 			</td>';
-		$table .= '</tr>';
-	}
-	$table .= '</tbody> </table>';
 
-	$fragment->setVar('content', $msg . $table, false);
+		return $content;
+	});
+
+	$fragment->setVar('content', $msg . $list->get(), false);
 	echo $fragment->parse('core/page/section.php');
 }
