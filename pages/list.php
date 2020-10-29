@@ -1,17 +1,20 @@
 <?php
 
-function create_column($value)
-{
-	return '<td>' . htmlspecialchars($value) . '</td>';
-}
-
 // first check whether we have an incoming request to modify some of our data
-$funcs = ['create_event', 'edit_event', 'delete_event'];
+$form_funcs = ['create_event', 'edit_event', 'delete_event'];
+$status_funcs = ['event_offline', 'event_online'];
 $requested_func = rex_get('func');
 
 $msg = '';
 
-if (in_array($requested_func, $funcs)) {
+if (in_array($requested_func, $status_funcs)) {
+	$event_id = rex_get('event_id');
+	$query = 'UPDATE naju_event SET event_active = IF (event_active, 0, 1) WHERE event_id = :id';
+	$sql = rex_sql::factory();
+	$sql->setQuery($query, ['id' => $event_id]);
+}
+
+if (in_array($requested_func, $form_funcs)) {
 	switch ($requested_func) {
 		case 'create_event':
 			break;
@@ -139,7 +142,8 @@ EOSQL;
 				g.group_name,
 				e.event_start,
 				e.event_end,
-				e.event_location
+				e.event_location,
+				e.event_active
 			from
 				naju_event e
 				join naju_local_group g on e.event_group = g.group_id
@@ -157,7 +161,8 @@ EOSQL;
 				g.group_name,
 				e.event_start,
 				e.event_end,
-				e.event_location
+				e.event_location,
+				e.event_active
 			from
 				naju_event e
 				join naju_local_group g on e.event_group = g.group_id
@@ -172,21 +177,25 @@ EOSQL;
 
 	$list = rex_list::factory($event_query);
 
-	$th_edit = '<th colspan="2">Bearbeiten</th>';
+	$th_edit = '<th colspan="3">Bearbeiten</th>';
 	$td_edit = '###TH_EDIT###';
 
 	$list->removeColumn('event_id');
+	$list->removeColumn('event_active');
+
 	$list->setColumnLabel('event_name', 'Name');
 	$list->setColumnLabel('group_name', 'Ortsgruppe');
 	$list->setColumnLabel('event_start', 'Startdatum');
 	$list->setColumnLabel('event_end', 'Enddatum');
 	$list->setColumnLabel('event_location', 'Ort');
+
 	$list->addColumn($th_edit, $td_edit, -1, ['###VALUE###', '###VALUE###']);
 	$list->setColumnFormat($th_edit, 'custom', function ($params) {
 		$list = $params['list'];
 		$content = '';
 
 		$event_id = $list->getValue('event_id');
+		$event_active = $list->getValue('event_active');
 
 		$content .= '
 			<td class="rex-table-action">
@@ -201,6 +210,22 @@ EOSQL;
 					<i class="rex-icon rex-icon-delete"></i> löschen
 				</a>
 			</td>';
+
+		if ($event_active) {
+			$content .= '
+				<td class="rex-table-action">
+					<a class="rex-online" href="' . rex_url::currentBackendPage(['func' => 'event_offline', 'event_id' => urlencode($event_id)]) . '">
+						<i class="rex-icon rex-icon-online"></i> online
+					</a>
+				</td>';
+		} else {
+			$content .= '
+				<td class="rex-table-action">
+					<a class="rex-offline" href="' . rex_url::currentBackendPage(['func' => 'event_online', 'event_id' => urlencode($event_id)]) . '">
+						<i class="rex-icon rex-icon-offline"></i> offline
+					</a>
+				</td>';
+		}
 
 		return $content;
 	});
