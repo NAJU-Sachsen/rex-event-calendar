@@ -180,6 +180,7 @@ EOSQL;
 	}
 
 	$list = rex_list::factory($event_query, 30, $list_name);
+	$list->addTableAttribute('class', 'table-striped table-hover');
 
 	$th_edit = '<th colspan="3">Bearbeiten</th>';
 	$td_edit = '###TH_EDIT###';
