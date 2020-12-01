@@ -39,6 +39,25 @@ if (in_array($requested_func, $form_funcs)) {
 			$field = $form->addTextField('event_name');
 			$field->setLabel('Name');
 
+			// event_group
+			$field = $form->addSelectField('event_group');
+			$field->setLabel('Ortsgruppe');
+			$select = $field->getSelect();
+
+			if (rex::getUser()->isAdmin()) {
+				$local_groups = rex_sql::factory()->setQuery('SELECT group_id, group_name FROM naju_local_group')->getArray();
+			} else {
+				$user_id = rex::getUser()->getId();
+				$query = 'SELECT group_id, group_name
+					FROM naju_local_group g JOIN naju_group_account ga ON g.group_id = ga.group_id
+					WHERE ga.account_id = :id';
+				$local_groups = rex_sql::factory()->setQuery($query, ['id' => $user_id]);
+			}
+
+			foreach ($local_groups as $group) {
+				$select->addOption($group['group_name'], $group['group_id']);
+			}
+
 			// event_start
 			$field = $form->addInputField('date', 'event_start', null, ['class' => 'form-control']);
 			$field->setLabel('Start');
@@ -46,6 +65,16 @@ if (in_array($requested_func, $form_funcs)) {
 			// event_end
 			$field = $form->addInputField('date', 'event_end', null, ['class' => 'form-control']);
 			$field->setLabel('Ende');
+			$field->setDefaultSaveValue(null);
+
+			// event_start_time
+			$field = $form->addInputField('time', 'event_start_time', null, ['class' => 'form-control']);
+			$field->setLabel('Startzeit (optional)');
+			$field->setDefaultSaveValue(null);
+
+			// event_end_time
+			$field = $form->addInputField('time', 'event_end_time', null, ['class' => 'form-control']);
+			$field->setLabel('Endzeit (optional)');
 			$field->setDefaultSaveValue(null);
 
 			// event_description

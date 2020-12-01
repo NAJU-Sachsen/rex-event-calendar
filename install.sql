@@ -4,6 +4,8 @@ create table if not exists naju_event (
 	event_name varchar(75) not null,
 	event_group int(10) unsigned not null,
 	event_start date not null,
+	event_start_time time,
+	event_end_time time,
 
 	event_end date,
 	event_description mediumtext,
@@ -15,7 +17,7 @@ create table if not exists naju_event (
 	event_registration varchar(75),
 
 	event_target_group_type set('children', 'teens', 'families', 'young_adults'),
-	event_type enum('camp', 'workshop', 'work_assignment', 'group_meeting', 'other'),
+	event_type enum('camp', 'workshop', 'work_assignment', 'group_meeting', 'excursion', 'other'),
 
 	event_link int(10) unsigned,
 	event_active boolean not null default true,

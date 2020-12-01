@@ -45,6 +45,16 @@ $field = $form->addInputField('date', 'event_end', null, ['class' => 'form-contr
 $field->setLabel('Enddatum (optional)');
 $field->setDefaultSaveValue(null);
 
+// event start time
+$field = $form->addInputField('time', 'event_start_time', null, ['class' => 'form-control']);
+$field->setLabel('Startzeit (optional)');
+$field->setDefaultSaveValue(null);
+
+// event end time
+$field = $form->addInputField('time', 'event_end_time', null, ['class' => 'form-control']);
+$field->setLabel('Endzeit (optional)');
+$field->setDefaultSaveValue(null);
+
 // event description field
 $field = $form->addTextAreaField('event_description');
 $field->setLabel('Beschreibung');
@@ -71,7 +81,8 @@ $field->setLabel('Zielgruppe beschreiben (optional)');
 $field = $form->addRadioField('event_type');
 $field->setLabel('Veranstaltungsart:');
 $field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop',
-    'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen', 'other' => 'sonstiges']);
+    'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen',
+    'excursion' => 'Exkursion', 'other' => 'sonstiges']);
 
 // event price field
 $field = $form->addTextField('event_price');
@@ -89,10 +100,6 @@ $field->setLabel('Anmeldeinfos (optional)');
 $field = $form->addLinkmapField('event_link');
 $field->setLabel('Link zum Artikel (optional)');
 $field->setDefaultSaveValue(null);
-
-//$form->show();
-
-//echo '<hr>';
 
 $content = '';
 $msg = rex_get('_msg');
