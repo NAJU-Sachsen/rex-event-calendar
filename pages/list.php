@@ -113,7 +113,8 @@ if (in_array($requested_func, $form_funcs)) {
 			$field = $form->addRadioField('event_type');
 			$field->setLabel('Veranstaltungsart:');
 			$field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop',
-				'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen', 'other' => 'sonstiges']);
+				'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen',
+				'excursion' => 'Exkursion', 'other' => 'sonstiges']);
 
 			// event_price
 			$field = $form->addTextField('event_price');
