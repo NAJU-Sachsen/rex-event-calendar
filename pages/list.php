@@ -85,6 +85,11 @@ if (in_array($requested_func, $form_funcs)) {
 			$field = $form->addTextField('event_location');
 			$field->setLabel('Ort');
 
+			// event_booked_out
+			$field = $form->addCheckboxField('event_booked_out', null, ['class' => 'form-control']);
+			$field->setLabel('Ausgebucht?');
+			$field->setDefaultSaveValue(false);
+
 			// event target group type field
 			$field = $form->addSelectField('event_target_group_type');
 			$field->setLabel('Zielgruppen auswählen');
@@ -250,7 +255,7 @@ EOSQL;
 				</a>
 			</td>';
 
-		
+
 		if ($event_active) {
 			$href = array_merge($href, ['func' => 'event_offline']);
 			$content .= '
