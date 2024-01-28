@@ -86,9 +86,9 @@ if (in_array($requested_func, $form_funcs)) {
 			$field->setLabel('Ort');
 
 			// event_booked_out
-			$field = $form->addCheckboxField('event_booked_out', null, ['class' => 'form-control']);
+			$field = $form->addRadioField('event_booked_out');
 			$field->setLabel('Ausgebucht?');
-			$field->setDefaultSaveValue(false);
+			$field->addArrayOptions([0 => 'nein', 1 => 'ja']);
 
 			// event target group type field
 			$field = $form->addSelectField('event_target_group_type');
