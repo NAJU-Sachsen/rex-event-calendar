@@ -29,7 +29,7 @@ EOSQL;
         where ga.account_id = :id
 EOSQL;
 
-    $local_groups = rex_sql::factory()->setQuery($permitted_groups_query, ['id' => $user_id])->getArray();    
+    $local_groups = rex_sql::factory()->setQuery($permitted_groups_query, ['id' => $user_id])->getArray();
 }
 
 foreach ($local_groups as $group) {
@@ -82,7 +82,7 @@ $field = $form->addRadioField('event_type');
 $field->setLabel('Veranstaltungsart:');
 $field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop',
     'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen',
-    'excursion' => 'Exkursion', 'other' => 'sonstiges']);
+    'excursion' => 'Exkursion', 'holiday_event' => 'Ferienveranstaltung', 'other' => 'sonstiges']);
 
 // event price field
 $field = $form->addTextField('event_price');

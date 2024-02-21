@@ -1,5 +1,5 @@
 package: naju_event_calendar
-version: '0.4.0'
+version: '0.5.0'
 author: NAJU Sachsen
 supportpage: https://github.com/NAJU-Sachsen/rex-event-calendar
 requires:
@@ -7,7 +7,7 @@ requires:
   php: '>=7.1'
   packages:
     naju_group_accounts: '>=0.0.1'
-    naju_rex_extensions: '>=0.0.3'
+    naju_rex_extensions: '>=1.0.5'
 page:
   title: 'Veranstaltungen'
   icon: rex-icon fa-calendar

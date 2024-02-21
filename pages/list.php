@@ -119,7 +119,7 @@ if (in_array($requested_func, $form_funcs)) {
 			$field->setLabel('Veranstaltungsart:');
 			$field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop',
 				'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen',
-				'excursion' => 'Exkursion', 'other' => 'sonstiges']);
+				'excursion' => 'Exkursion', 'holiday_event' => 'Ferienveranstaltung', 'other' => 'sonstiges']);
 
 			// event_price
 			$field = $form->addTextField('event_price');
