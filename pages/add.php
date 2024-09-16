@@ -36,6 +36,14 @@ foreach ($local_groups as $group) {
 	$select->addOption($group['group_name'], $group['group_id']);
 }
 
+// event tags select
+$field = $form->addSelectField('event_tags', null, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']);
+$field->setLabel('Tags (optional)');
+$select = $field->getSelect();
+$select->addSqlOptions('SELECT tag_name, tag_name FROM naju_event_tags ORDER BY tag_name');
+$select->setMultiple();
+$select->setSize(3);
+
 // event start date field
 $field = $form->addInputField('date', 'event_start', null, ['class' => 'form-control']);
 $field->setLabel('Startdatum');
@@ -67,9 +75,14 @@ $field->setLabel('Ort (optional)');
 $field = $form->addSelectField('event_target_group_type');
 $field->setLabel('Zielgruppen auswählen');
 $select = $field->getSelect();
-$select->addArrayOptions(['children' => 'Kinder', 'teens' => 'Jugendliche',
-    'young_adults' => 'junge Erwachsene', 'families' => 'Familien']);
+$select->addArrayOptions([
+    'children' => 'Kinder',
+    'teens' => 'Jugendliche',
+    'young_adults' => 'junge Erwachsene',
+    'families' => 'Familien'
+]);
 $select->setMultiple();
+$field->setNotice('Mit [Strg] können mehere Einträge ausgewählt werden');
 
 // TODO event_target_group_type is a SET column but SET is currently not supported...
 
@@ -80,9 +93,15 @@ $field->setLabel('Zielgruppe beschreiben (optional)');
 // event type field
 $field = $form->addRadioField('event_type');
 $field->setLabel('Veranstaltungsart:');
-$field->addArrayOptions(['camp' => 'Camp', 'workshop' => 'Workshop',
-    'work_assignment' => 'Arbeitseinsatz', 'group_meeting' => 'Aktiventreffen',
-    'excursion' => 'Exkursion', 'holiday_event' => 'Ferienveranstaltung', 'other' => 'sonstiges']);
+$field->addArrayOptions([
+    'camp' => 'Camp',
+    'workshop' => 'Workshop',
+    'work_assignment' => 'Arbeitseinsatz',
+    'group_meeting' => 'Aktiventreffen',
+    'excursion' => 'Exkursion',
+    'holiday_event' => 'Ferienveranstaltung',
+    'other' => 'sonstiges'
+]);
 
 // event price field
 $field = $form->addTextField('event_price');

@@ -18,11 +18,18 @@ create table if not exists naju_event (
 
 	event_target_group_type set('children', 'teens', 'families', 'young_adults'),
 	event_type enum('camp', 'workshop', 'work_assignment', 'group_meeting', 'excursion', 'holiday_event', 'other'),
+	event_tags text not null default '',
 
 	event_link int(10) unsigned,
 	event_active boolean not null default true,
+	event_booked_out boolean not null default false,
 
 	primary key (event_id),
 	foreign key fk_event_group (event_group) references naju_local_group(group_id),
 	foreign key fk_event_article (event_link) references rex_article(id)
+);
+
+create table if not exists naju_event_tags (
+	tag_name varchar(75) not null,
+	unique(tag_name)
 );

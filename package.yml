@@ -1,5 +1,5 @@
 package: naju_event_calendar
-version: '0.5.0'
+version: '0.6.0'
 author: NAJU Sachsen
 supportpage: https://github.com/NAJU-Sachsen/rex-event-calendar
 requires:
@@ -16,3 +16,5 @@ page:
       title: 'Kalender'
     add:
       title: 'Hinzufügen'
+    tags:
+      title: 'Veranstaltungs-Tags'

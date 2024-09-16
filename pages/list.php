@@ -27,6 +27,12 @@ if (in_array($requested_func, $form_funcs)) {
 				break;
 			}
 
+			$event = rex_sql::factory()
+				->setTable('naju_event')
+				->setWhere(['event_id' => $event_id])
+				->select('event_tags, event_target_group_type')
+				->getRow();
+
 			$fragment = new rex_fragment();
 			$fragment->setVar('title', 'Veranstaltung bearbeiten');
 			$fragment->setVar('class', 'edit', false);
@@ -56,6 +62,22 @@ if (in_array($requested_func, $form_funcs)) {
 
 			foreach ($local_groups as $group) {
 				$select->addOption($group['group_name'], $group['group_id']);
+			}
+
+			// event tags select
+			$field = $form->addSelectField('event_tags', null, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']);
+			$field->setLabel('Tags (optional)');
+			$select = $field->getSelect();
+			$select->setMultiple();
+			$select->setSize(3);
+
+			// inflate event tags select
+			$tags = rex_sql::factory()->getArray('SELECT tag_name FROM naju_event_tags ORDER BY tag_name');
+			$selected_tags = explode(',', $event['naju_event.event_tags']);
+			foreach ($tags as $tag) {
+				$tag_name = $tag['tag_name'];
+				$attrs = in_array($tag_name, $selected_tags) ? ['selected' => true] : [];
+				$select->addOption($tag_name, $tag_name, 0, 0, $attrs);
 			}
 
 			// event_start
@@ -97,11 +119,8 @@ if (in_array($requested_func, $form_funcs)) {
 			$select->setMultiple();
 
 			// inflate event target group select
-			$event = rex_sql::factory()->setQuery(
-				'select event_target_group_type from naju_event where event_id = :id', ['id' => $event_id])->getArray()[0];
-
 			$target_groups = ['children' => 'Kinder', 'teens' => 'Jugendliche', 'young_adults' => 'junge Erwachsene', 'families' => 'Familien'];
-			$selected_target_groups = explode(',', $event['event_target_group_type']);
+			$selected_target_groups = explode(',', $event['naju_event.event_target_group_type']);
 			foreach ($target_groups as $tg_key => $tg_val) {
 				if (in_array($tg_key, $selected_target_groups)) {
 					$select->addOption($tg_val, $tg_key, 0, 0, ['selected' => 'true']);
@@ -141,6 +160,7 @@ if (in_array($requested_func, $form_funcs)) {
 			$fragment->setVar('body', $form->get(), false);
 			echo $fragment->parse('core/page/section.php');
 			break;
+
 		case 'delete_event':
 			$event_id = rex_get('event_id');
 			if (!$event_id) {
@@ -150,7 +170,7 @@ if (in_array($requested_func, $form_funcs)) {
 				delete from naju_event
 				where event_id = :id
 				limit 1
-EOSQL;
+			EOSQL;
 
 			$sql = rex_sql::factory()->setQuery($delete_query, ['id' => $event_id]);
 
@@ -163,6 +183,11 @@ EOSQL;
 				$msg .= '<p class="alert alert-success">Veranstaltung wurde gelöscht</p>';
 			}
 
+			$fragment = new rex_fragment();
+			$fragment->setVar('title', 'Veranstaltung löschen');
+			$fragment->setVar('class', 'edit', false);
+			$fragment->setVar('body', $msg, false);
+			echo $fragment->parse('core/page/section.php');
 			break;
 	}
 } else {
@@ -250,7 +275,7 @@ EOSQL;
 
 		$content .=  '
 			<td class="rex-table-action">
-				<a href="' . rex_url::currentBackendPage(['func' => 'delete_event']) . '">
+				<a href="' . rex_url::currentBackendPage(array_merge($href, ['func' => 'delete_event'])) . '">
 					<i class="rex-icon rex-icon-delete"></i> löschen
 				</a>
 			</td>';
