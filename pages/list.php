@@ -51,12 +51,14 @@ if (in_array($requested_func, $form_funcs)) {
 			$select = $field->getSelect();
 
 			if (rex::getUser()->isAdmin()) {
-				$local_groups = rex_sql::factory()->getArray('SELECT group_id, group_name FROM naju_local_group');
+				$local_groups = rex_sql::factory()->getArray('SELECT group_id, group_name FROM naju_local_group ORDER BY group_name');
 			} else {
 				$user_id = rex::getUser()->getId();
 				$query = 'SELECT g.group_id, g.group_name
 					FROM naju_local_group g JOIN naju_group_account ga ON g.group_id = ga.group_id
-					WHERE ga.account_id = :id';
+					WHERE ga.account_id = :id
+						AND NOT g.group_internal
+					ORDER BY g.group_name';
 				$local_groups = rex_sql::factory()->getArray($query, ['id' => $user_id]);
 			}
 

@@ -16,6 +16,7 @@ if (rex::getUser()->isAdmin()) {
     $group_query = <<<EOSQL
         select group_id, group_name
         from naju_local_group
+        order by group_name
 EOSQL;
     $local_groups = rex_sql::factory()->setQuery($group_query)->getArray();
 } else {
@@ -27,6 +28,8 @@ EOSQL;
             join naju_group_account ga
             on g.group_id = ga.group_id
         where ga.account_id = :id
+            and not g.group_internal
+        order by g.group_name
 EOSQL;
 
     $local_groups = rex_sql::factory()->setQuery($permitted_groups_query, ['id' => $user_id])->getArray();
