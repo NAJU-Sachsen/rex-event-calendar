@@ -202,7 +202,7 @@ if (in_array($requested_func, $form_funcs)) {
 
 	if (rex::getUser()->isAdmin()) {
 		$event_query = <<<EOSQL
-			select
+			SELECT
 				e.event_id,
 				e.event_name,
 				g.group_name,
@@ -210,18 +210,16 @@ if (in_array($requested_func, $form_funcs)) {
 				e.event_end,
 				e.event_location,
 				e.event_active
-			from
+			FROM
 				naju_event e
-				join naju_local_group g on e.event_group = g.group_id
-			where
-				e.event_start >= '$current_date'
-			order by e.event_start desc, e.event_end desc
+				JOIN naju_local_group g ON e.event_group = g.group_id
+			ORDER BY e.event_start DESC, e.event_end DESC
 EOSQL;
 		$events = rex_sql::factory()->setQuery($event_query)->getArray();
 	} else {
 		$user_id = rex::getUser()->getId();
 		$event_query = <<<EOSQL
-			select
+			SELECT
 				e.event_id,
 				e.event_name,
 				g.group_name,
@@ -229,14 +227,13 @@ EOSQL;
 				e.event_end,
 				e.event_location,
 				e.event_active
-			from
+			FROM
 				naju_event e
-				join naju_local_group g on e.event_group = g.group_id
-				join naju_group_account ga on e.event_group = ga.group_id
-			where
-				e.event_start >= '$current_date'
-				and ga.account_id = '$user_id'
-			order by e.event_start desc, e.event_end desc
+				JOIN naju_local_group g ON e.event_group = g.group_id
+				JOIN naju_group_account ga ON e.event_group = ga.group_id
+			WHERE
+				ga.account_id = '$user_id'
+			ORDER BY e.event_start DESC, e.event_end DESC
 EOSQL;
 		$events = rex_sql::factory()->setQuery($event_query)->getArray();
 	}
