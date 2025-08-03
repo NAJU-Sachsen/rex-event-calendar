@@ -1,12 +1,12 @@
 package: naju_event_calendar
-version: '0.6.0'
+version: '0.7.0'
 author: NAJU Sachsen
 supportpage: https://github.com/NAJU-Sachsen/rex-event-calendar
 requires:
   redaxo: '^5.10'
   php: '>=7.1'
   packages:
-    naju_group_accounts: '>=0.0.1'
+    naju_group_accounts: '>=0.0.3'
     naju_rex_extensions: '>=1.0.5'
 page:
   title: 'Veranstaltungen'

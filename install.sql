@@ -20,13 +20,13 @@ create table if not exists naju_event (
 	event_type enum('camp', 'workshop', 'work_assignment', 'group_meeting', 'excursion', 'holiday_event', 'other'),
 	event_tags text not null default '',
 
-	event_link int(10) unsigned,
+	event_link int(10) unsigned default null,
+	event_registration_form varchar(255) default null,  -- same as rex_media(filename)
 	event_active boolean not null default true,
 	event_booked_out boolean not null default false,
 
 	primary key (event_id),
-	foreign key fk_event_group (event_group) references naju_local_group(group_id),
-	foreign key fk_event_article (event_link) references rex_article(id)
+	foreign key fk_event_group (event_group) references naju_local_group(group_id)
 );
 
 create table if not exists naju_event_tags (

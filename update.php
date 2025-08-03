@@ -51,3 +51,11 @@ if (rex_version::compare($this->getVersion(), '0.6.0', '<')) {
         ->addColumn(new rex_sql_column('tag_name', 'varchar(75)', false, null, 'unique'))
         ->create();
 }
+
+
+// upgrade to v0.7.0
+if (rex_version::compare($this->getVersion(), '0.7.0', '<')) {
+    rex_sql_table::get('naju_event')
+        ->ensureColumn(new rex_sql_column('event_registration_form', 'varchar(255)', true))
+        ->alter();
+}

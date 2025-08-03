@@ -118,6 +118,12 @@ $field->setLabel('reduzierter Preis (optional)');
 $field = $form->addTextField('event_registration');
 $field->setLabel('Anmeldeinfos (optional)');
 
+// event registration form field
+$field = $form->addMediaField('event_registration_form');
+$field->setLabel('Anmeldeformular');
+$field->setNotice('Optional. Bitte nur PDF-Dateien auswählen');
+$field->setTypes('pdf');
+
 // event further reading link
 $field = $form->addLinkmapField('event_link');
 $field->setLabel('Link zum Artikel (optional)');

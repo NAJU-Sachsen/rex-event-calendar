@@ -10,7 +10,8 @@ class naju_event_calendar
             || $event['event_target_group']
             || $event['event_price']
             || $event['event_price_reduced']
-            || $event['event_registration'];
+            || $event['event_registration']
+            || $event['event_registration_form'];
 
     }
 }

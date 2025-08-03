@@ -154,6 +154,13 @@ if (in_array($requested_func, $form_funcs)) {
 			$field = $form->addTextField('event_registration');
 			$field->setLabel('Anmeldeinfos');
 
+			// event_registration_form
+			$field = $form->addMediaField('event_registration_form');
+			$field->setLabel('Anmeldeformular');
+			$field->setNotice('Optional. Bitte nur PDF-Dateien auswählen');
+			$field->setDefaultSaveValue(null);
+			$field->setTypes('pdf');
+
 			// event_link
 			$field = $form->addLinkmapField('event_link');
 			$field->setLabel('Artikel-Link');
